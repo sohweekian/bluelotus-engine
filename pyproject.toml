@@ -5,12 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "bluelotus-engine"
 version = "3.0.0"
-description = "Deterministic BlueLotus V3 research engine — governance, clerk, NITE-PEI, SLICDO (no publish, no telegram)."
+description = "Deterministic BlueLotus V3 research engine — governance, clerk, NITE-PEI, BGTM game theory, SLICDO."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.11"
 authors = [{ name = "BlueLotus Project Contributors" }]
-keywords = ["finance", "research", "governance", "bayesian", "family-office"]
+keywords = ["finance", "research", "governance", "bayesian", "family-office", "game-theory", "nash-equilibrium"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Science/Research",
@@ -23,6 +23,7 @@ dependencies = [
   "openpyxl>=3.1",
   "python-docx>=1.1",
   "jsonschema>=4.0",
+  "numpy>=1.26",
 ]
 
 [project.optional-dependencies]
@@ -54,6 +55,7 @@ include = [
   "research*",
   "scripts*",
   "cio_context_capsule*",
+  "geo_game_theory*",
 ]
 exclude = ["tests*", "tools*"]
 
