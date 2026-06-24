@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BlueLotus V3 Chief Clerk / Contradiction Mapper Master Prompt",
+  "type": "object",
+  "required": [
+    "version",
+    "status",
+    "role_name",
+    "role_authority",
+    "strategic_authority",
+    "analyst_authority",
+    "execution_authority",
+    "order_routing_enabled",
+    "system_orders_generated",
+    "allowed_functions",
+    "forbidden_functions",
+    "contradiction_map_schema",
+    "readiness_change_fields",
+    "master_prompt_text",
+    "prompt_hash"
+  ],
+  "properties": {
+    "version": { "const": "v1.0-chief-clerk-contradiction-mapper" },
+    "status": { "const": "ACTIVE" },
+    "role_name": { "const": "Chief Clerk / Contradiction Mapper" },
+    "role_authority": { "const": "CLERK_ONLY" },
+    "strategic_authority": { "const": false },
+    "analyst_authority": { "const": false },
+    "execution_authority": { "const": "NONE" },
+    "order_routing_enabled": { "const": false },
+    "system_orders_generated": { "const": 0 },
+    "allowed_functions": {
+      "type": "array",
+      "contains": { "const": "MAP_CONTRADICTIONS" }
+    },
+    "forbidden_functions": {
+      "type": "array",
+      "contains": { "const": "ADVISE" }
+    },
+    "contradiction_map_schema": { "type": "object" },
+    "readiness_change_fields": { "type": "array", "minItems": 5 },
+    "master_prompt_text": { "type": "string", "pattern": "The Clerk does not decide" },
+    "prompt_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

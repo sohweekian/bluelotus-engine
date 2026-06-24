@@ -1,0 +1,33 @@
+pipeline:
+  display_name: BlueLotus V3 Research Pipeline
+  wait_seconds: 0
+  persist_db: false
+  continue_on_step_error: true
+  default_step_timeout_seconds: 300
+
+# Research distribution: no data fetchers, no GitHub publish, no Telegram.
+# Provide data/frontend/dataset_raw.json (see: bluelotus init-workspace).
+
+steps:
+  - working_dir: .
+    module: governance.run_contract_validation
+    timeout_seconds: 120
+  - working_dir: governance
+    script: governance_gate.py
+  - working_dir: governance
+    script: scenario_overlay_engine.py
+  - working_dir: governance
+    script: regression_tests.py
+  - working_dir: research
+    script: research_report_generator.py
+  - working_dir: research
+    script: run_report_regression_audit.py
+  - working_dir: .
+    module: orchestration.run_deterministic_clerk_cycle
+    timeout_seconds: 120
+  - working_dir: .
+    module: scripts.run_nite_pei_cycle
+    timeout_seconds: 300
+  - working_dir: scripts
+    script: run_slicdo_learning_cycle.py
+    timeout_seconds: 120

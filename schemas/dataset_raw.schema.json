@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BlueLotus dataset_raw.json",
+  "type": "object",
+  "required": ["meta", "regime", "portfolio", "execution", "cio_decisions"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["generated_at", "market_session"]
+    },
+    "execution": {
+      "type": "object",
+      "required": ["execution_authority", "order_routing_enabled"]
+    }
+  }
+}

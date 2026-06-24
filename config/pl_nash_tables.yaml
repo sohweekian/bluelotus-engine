@@ -1,0 +1,20 @@
+# ============================================================================
+# BlueLotus V3 — BGTM-V1 Nash Equilibrium Tables (M7)
+# pl_nash_tables.yaml
+# ============================================================================
+
+games:
+  HORMUZ_2026:
+    module: geo_game_theory.games.hormuz_2026
+    thesis_ref: "BGTM-V1 §7"
+    linked_theses:
+      - TRUMP_UNCERTAINTY_THESIS
+      - PETRO_RECYCLED_DOLLAR_THESIS
+
+  GLOBAL_RATES_2026:
+    module: geo_game_theory.games.global_rates_2026
+    thesis_ref: "BGTM-V1 §8"
+    linked_theses:
+      - HAWKISH_BOJ_THESIS
+      - HAWKISH_WARSH_THESIS
+      - STICKY_INFLATION_THESIS

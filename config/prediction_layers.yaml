@@ -1,0 +1,228 @@
+# ============================================================================
+# BlueLotus V3 — Prediction Layer Registry
+# prediction_layers.yaml
+#
+# PURPOSE: Feature-flag control for all PLEXP-001 modules.
+# INVARIANT: No changes here affect existing pipeline functionality.
+# AUTHOR: PLEXP-001 Work Order
+# DATE: 2026-06-23
+# ============================================================================
+
+# Global shadow mode override — set true to force ALL modules into shadow mode
+# regardless of individual module settings.
+global_shadow_mode: true
+
+# Global integration gate — must be false until CIO explicitly approves
+# individual module integration after 30-day shadow period review.
+global_integration_enabled: false
+
+modules:
+
+  # --------------------------------------------------------------------------
+  # M1 — OPTIONS FLOW (Priority P0 — CRITICAL)
+  # Source: yfinance options chain (free, no API key required)
+  # --------------------------------------------------------------------------
+  options_flow:
+    enabled: false                     # SET true TO ACTIVATE
+    shadow_mode: true                  # MUST remain true for 30 days minimum
+    integrated_mode: false             # CIO approval required before setting true
+    timeout_seconds: 120
+    script: fetch_pl_options_flow.py
+    output_key: prediction_layers.options_flow
+    tickers_source: watchlist_top50    # Only top 50 by watchlist rank to limit API calls
+    expiry_count: 2                    # Fetch nearest 2 expiry dates
+    shadow_start_date: null            # Set to ISO date when first enabled
+    integration_approved_date: null    # Set by CIO on approval
+    notes: >
+      yfinance Ticker.option_chain() — free, no key needed.
+      Fetches P/C OI ratio, IV30, top OI strikes per expiry.
+      Circuit breaker at 120s. On failure writes _status: FAILED.
+
+  # --------------------------------------------------------------------------
+  # M2 — CREDIT SPREAD MONITOR (Priority P1 — HIGH)
+  # Source: yfinance (HYG, LQD, VCSH — free)
+  # --------------------------------------------------------------------------
+  credit_spreads:
+    enabled: false
+    shadow_mode: true
+    integrated_mode: false
+    timeout_seconds: 30
+    script: fetch_pl_credit_spreads.py
+    output_key: prediction_layers.credit_spreads
+    tickers: [HYG, LQD, VCSH, JNK]
+    lookback_days: 20
+    shadow_start_date: null
+    integration_approved_date: null
+    notes: >
+      Adds HYG, LQD, VCSH price and ratio to prediction_layers key.
+      Computes HYG/LQD ratio and 5-day rate of change.
+      Zero data cost — same yfinance source as existing price fetch.
+
+  # --------------------------------------------------------------------------
+  # M3 — CHEAP TALK SIGNAL CLASSIFIER (Priority P1 — HIGH)
+  # Source: Pure Python — no external API
+  # --------------------------------------------------------------------------
+  cheap_talk_classifier:
+    enabled: false
+    shadow_mode: true
+    integrated_mode: false
+    timeout_seconds: 10
+    script: run_pl_cheap_talk_classifier.py
+    output_key: prediction_layers.cheap_talk_assessments
+    player_catalog: config/pl_player_catalog.yaml
+    insertion_point: pre_governance     # Runs AFTER export_dataset_raw, BEFORE governance_gate
+    shadow_start_date: null
+    integration_approved_date: null
+    notes: >
+      Crawford-Sobel cheap talk filter from BGTM-V1 §5.2.
+      Reads headlines from dataset_raw.json, classifies each geopolitical
+      event by credibility, outputs credibility_discount per event.
+      No external API. Pure deterministic Python.
+
+  # --------------------------------------------------------------------------
+  # M4 — VWAP DAILY PROXY (Priority P2 — MEDIUM)
+  # Source: yfinance OHLCV — already fetched, zero new API calls
+  # --------------------------------------------------------------------------
+  vwap_proxy:
+    enabled: false
+    shadow_mode: true
+    integrated_mode: false
+    timeout_seconds: 20
+    script: fetch_pl_vwap_proxy.py
+    output_key: prediction_layers.vwap_proxy
+    tickers_source: portfolio_plus_watchlist_top100
+    shadow_start_date: null
+    integration_approved_date: null
+    notes: >
+      Reads prices already in dataset_raw.json (no new yfinance call).
+      Computes VWAP = (H+L+C)/3 approximation per ticker.
+      close_vs_vwap: ABOVE / BELOW / AT (within 0.1%).
+      Purely computational — reads existing data, zero network cost.
+
+  # --------------------------------------------------------------------------
+  # M5 — SHORT INTEREST (Priority P2)
+  # Source: FINRA REGSHO (free, bi-weekly)
+  # --------------------------------------------------------------------------
+  short_interest:
+    enabled: false
+    shadow_mode: true
+    integrated_mode: false
+    timeout_seconds: 60
+    script: fetch_pl_short_interest.py
+    output_key: prediction_layers.short_interest
+    finra_endpoint: EQShortData        # Named key into pl_data_sources.yaml short_interest.endpoints
+    update_frequency: biweekly
+    shadow_start_date: null
+    integration_approved_date: null
+
+  # --------------------------------------------------------------------------
+  # M6 — ETF DAILY FLOW PROXY (Priority P2)
+  # Source: iShares public spreadsheet or ETF.com
+  # --------------------------------------------------------------------------
+  etf_flow:
+    enabled: false
+    shadow_mode: true
+    integrated_mode: false
+    timeout_seconds: 90
+    script: fetch_pl_etf_flow.py
+    output_key: prediction_layers.etf_flow
+    etfs: [ARKK, XLK, XLE, GDX, GDXJ, GLD, XLF, VNQ, IWM]
+    shadow_start_date: null
+    integration_approved_date: null
+
+  # --------------------------------------------------------------------------
+  # M7 — GEO-LR BRIDGE (Priority P2)
+  # Source: Pure Python — reads dataset_raw.json + player_catalog
+  # --------------------------------------------------------------------------
+  geo_lr_bridge:
+    enabled: false
+    shadow_mode: true
+    integrated_mode: false
+    timeout_seconds: 15
+    script: run_pl_geo_lr_bridge.py
+    output_key: prediction_layers.geo_lr_bridge
+    insertion_point: pre_governance
+    nash_equilibrium_tables: config/pl_nash_tables.yaml
+    shadow_start_date: null
+    integration_approved_date: null
+
+  # --------------------------------------------------------------------------
+  # M8 — REDDIT SENTIMENT VELOCITY (Priority P2)
+  # Source: Reddit API (free tier)
+  # --------------------------------------------------------------------------
+  reddit_sentiment:
+    enabled: false
+    shadow_mode: true
+    integrated_mode: false
+    timeout_seconds: 60
+    script: fetch_pl_reddit_sentiment.py
+    output_key: prediction_layers.reddit_sentiment
+    subreddits: [wallstreetbets, investing, stocks, StockMarket]
+    tickers_source: portfolio_plus_watchlist_top50
+    lookback_hours: 4
+    shadow_start_date: null
+    integration_approved_date: null
+
+  # --------------------------------------------------------------------------
+  # M9 — STACKELBERG SIGNALLING DISCOUNT (Priority P3)
+  # Source: Pure Python — modifies LR table inputs only in shadow output
+  # --------------------------------------------------------------------------
+  stackelberg_discount:
+    enabled: false
+    shadow_mode: true
+    integrated_mode: false
+    timeout_seconds: 10
+    script: run_pl_stackelberg_discount.py
+    output_key: prediction_layers.stackelberg_assessments
+    insertion_point: pre_governance
+    discount_factors:
+      fed_chair_statement: 0.60
+      fomc_member_statement: 0.55
+      boj_governor_statement: 0.60
+      boj_deputy_statement: 0.50
+    shadow_start_date: null
+    integration_approved_date: null
+
+  # --------------------------------------------------------------------------
+  # M10 — EARNINGS SURPRISE TRACKER (Priority P3)
+  # Source: Finnhub (already integrated)
+  # --------------------------------------------------------------------------
+  earnings_surprise:
+    enabled: false
+    shadow_mode: true
+    integrated_mode: false
+    timeout_seconds: 60
+    script: fetch_pl_earnings_surprise.py
+    output_key: prediction_layers.earnings_surprise
+    lookback_quarters: 4
+    shadow_start_date: null
+    integration_approved_date: null
+
+  # --------------------------------------------------------------------------
+  # M11 — AAII SENTIMENT SURVEY (Priority P4)
+  # Source: aaii.com (free scrape, weekly)
+  # --------------------------------------------------------------------------
+  aaii_sentiment:
+    enabled: false
+    shadow_mode: true
+    integrated_mode: false
+    timeout_seconds: 30
+    script: fetch_pl_aaii_sentiment.py
+    output_key: prediction_layers.aaii_sentiment
+    update_frequency: weekly
+    shadow_start_date: null
+    integration_approved_date: null
+
+  # --------------------------------------------------------------------------
+  # M12 — OPEX CALENDAR (Priority P4)
+  # Source: Pure computation — no external API
+  # --------------------------------------------------------------------------
+  opex_calendar:
+    enabled: false
+    shadow_mode: true
+    integrated_mode: false
+    timeout_seconds: 5
+    script: fetch_pl_opex_calendar.py
+    output_key: prediction_layers.opex_calendar
+    shadow_start_date: null
+    integration_approved_date: null

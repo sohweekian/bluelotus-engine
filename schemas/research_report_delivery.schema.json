@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BlueLotus research_report_delivery_latest.json",
+  "type": "object",
+  "required": ["delivery_status", "generator_version", "operating_truth", "consistency_discipline"],
+  "properties": {
+    "operating_truth": {
+      "type": "object",
+      "required": [
+        "cio_action",
+        "report_readiness",
+        "execution_authority",
+        "order_routing_enabled",
+        "orders_generated_by_pipeline"
+      ]
+    },
+    "consistency_discipline": {
+      "type": "object",
+      "required": ["live_truth_consistency"]
+    }
+  }
+}

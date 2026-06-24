@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "generated_at": "2026-06-24T09:00:00+08:00",
+    "market_session": "MARKET_CLOSED_LAST_REGULAR_CLOSE",
+    "schema_version": "3.0-research-demo",
+    "source": "bluelotus-engine-sample"
+  },
+  "regime": {
+    "label": "MILD RISK OFF",
+    "score": -1,
+    "cio_action_field": "WAIT / HOLD"
+  },
+  "portfolio": {
+    "total_assets": 100000.0,
+    "cash": 48000.0,
+    "equity_value": 52000.0,
+    "positions": [
+      {"symbol": "DEMO_A", "weight_pct": 20.0, "pnl_pct": -1.2, "pnl_source": "BROKER_REPORTED"},
+      {"symbol": "DEMO_B", "weight_pct": 15.0, "pnl_pct": 2.1, "pnl_source": "BROKER_REPORTED"}
+    ],
+    "pnl_integrity_status": "BROKER_REPORTED"
+  },
+  "execution": {
+    "execution_authority": "CIO_ONLY_MANUAL",
+    "order_routing_enabled": false,
+    "system_orders_generated": 0
+  },
+  "cio_decisions": {
+    "pending_reviews": 3
+  },
+  "governance": {
+    "gate_score": 95,
+    "failed_gates": [],
+    "passed_gates": ["portfolio_integrity", "execution_doctrine", "pnl_integrity"]
+  },
+  "operators": {
+    "verdict_pack_path": "data/samples/operator_verdict_pack.demo.json"
+  },
+  "news_events": [],
+  "nite_pei": {
+    "ckri": 0.35,
+    "zone": "WATCH"
+  }
+}

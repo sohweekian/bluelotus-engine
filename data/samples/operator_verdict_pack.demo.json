@@ -1,0 +1,9 @@
+{
+  "operator_pack_id": "demo-pack-001",
+  "cycle_id": "demo_cycle_001",
+  "verdicts": [
+    {"operator_id": "gold_thesis_operator", "verdict": "BLOCK", "reason": "demo_block_gold_thesis_risk"}
+  ],
+  "blocked_actions": ["INCREASE_GOLD_THESIS_RISK"],
+  "permitted_actions": ["HOLD", "REVIEW", "WAIT"]
+}

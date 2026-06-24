@@ -1,0 +1,165 @@
+# ============================================================================
+# BlueLotus V3 — PLEXP-001 Data Source Registry
+# pl_data_sources.yaml
+#
+# PURPOSE: Config-driven paths, thresholds, and URLs for prediction layers.
+# INVARIANT: Modules read this file — no hardcoded source paths in Python.
+# ============================================================================
+
+project_paths:
+  prediction_layers_output: data/prediction_layers/prediction_layers.json
+  player_catalog: config/pl_player_catalog.yaml
+  signal_lexicon: config/pl_signal_lexicon.yaml
+  nash_tables: config/pl_nash_tables.yaml
+
+vwap:
+  band_pct: 0.001
+  ohlc_fallbacks:
+    - live_prices_direct
+    - historical_prices_db
+    - synthetic_prev_close
+  historical_prices:
+    ktype: K_DAY
+    autype: QFQ
+
+headline_sources:
+  - id: news_link_report
+    path: latest_news_link_report.records
+    headline_fields: [headline, title]
+    source_field: source
+    url_field: source_url
+
+  - id: ticker_sentiment
+    path: ticker_sentiment
+    mode: dict_headline_lists
+    list_field: headlines
+    source_template: "Ticker_Sentiment:{ticker}"
+
+  - id: signals_feed
+    path: signals
+    mode: signals_raw_text
+    headline_fields: [raw_text, headline, title]
+    source_field: source
+    max_per_source: 30
+
+  - id: event_correlations
+    path: event_correlations_all
+    mode: list_records
+    headline_fields: [headline, event_title, title]
+    source_field: source
+
+ticker_sources:
+  portfolio_positions:
+    path: portfolio.positions
+    mode: dict_keys
+  live_prices:
+    path: live_prices
+    mode: dict_keys
+  watchlist:
+    path: watchlist
+    mode: list_ticker_field
+    ticker_field: ticker
+    limit_from_config: true
+
+credit_spreads:
+  default_tickers: [HYG, LQD, VCSH, JNK]
+  lookback_days: 20
+  stress_ratio_chg_pct: -0.5
+  ease_ratio_chg_pct: 0.5
+
+etf_flow:
+  default_etfs: [ARKK, XLK, XLE, GDX, GDXJ, GLD, XLF, VNQ, IWM]
+  inflow_price_chg_pct: 0.3
+  inflow_volume_chg_ratio: 0.15
+
+short_interest:
+  active_endpoint: regShoDaily
+  endpoints:
+    regShoDaily:
+      url: https://api.finra.org/data/group/OTCMarket/name/regShoDaily
+      description: FINRA RegSHO Daily Short Sale Volume
+      fields:
+        short_quantity: shortParQuantity
+        total_quantity: totalParQuantity
+        date_field: tradeReportDate
+    EQShortData:
+      url: https://api.finra.org/data/group/OTCMarket/name/EQShortData
+      description: FINRA Equity Short Interest (bi-weekly)
+      fields:
+        short_quantity: shortVolume
+        total_quantity: totalVolume
+        date_field: date
+  ticker_limit: 30
+
+runner:
+  soft_failure_statuses:
+    - NO_CREDENTIALS
+    - NO_TICKERS
+    - NO_DATA
+    - IMPORT_ERROR
+    - HTTP_ERROR
+    - AUTH_FAILED
+    - FETCH_FAILED
+
+reddit:
+  env_client_id: REDDIT_CLIENT_ID
+  env_client_secret: REDDIT_CLIENT_SECRET
+  env_user_agent: REDDIT_USER_AGENT
+  default_user_agent: BlueLotusV3:PLEXP-001:1.0
+  default_subreddits: [wallstreetbets, investing, stocks, StockMarket]
+  posts_per_subreddit: 50
+
+aaii_sentiment:
+  urls:
+    - https://www.aaii.com/sentimentsurvey
+    - https://media.aaii.com/sentiment/sentiment.xls
+  user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+  accept_language: en-US,en;q=0.9
+  html_parse_patterns:
+    bar_bullish: 'bullish" style="width:([0-9]+\.[0-9]+)%">([0-9]+\.[0-9]+)%'
+    bar_neutral: 'neutral" style="width:([0-9]+\.[0-9]+)%">([0-9]+\.[0-9]+)%'
+    bar_bearish: 'bearish" style="width:([0-9]+\.[0-9]+)%">([0-9]+\.[0-9]+)%'
+    prose_bullish: 'Bullish sentiment.*?to ([0-9]+\.[0-9]+)%'
+    prose_bearish: 'Bearish sentiment.*?to ([0-9]+\.[0-9]+)%'
+    prose_neutral: 'Neutral market sentiment.*?to ([0-9]+\.[0-9]+)%'
+    chart_triplet: 'bullish:\s*([0-9]+\.[0-9]+)%<br>\s*neutral:\s*([0-9]+\.[0-9]+)%<br>\s*bearish:\s*([0-9]+\.[0-9]+)%'
+  bullish_extreme_spread: 10
+  bullish_spread: 3
+  bearish_extreme_spread: -10
+  bearish_spread: -3
+
+earnings_surprise:
+  dataset_paths:
+    - catalyst_calendar.earnings_estimates
+    - catalyst_calendar.all
+  finnhub_base: https://finnhub.io/api/v1
+  env_api_key: FINNHUB_API_KEY
+  portfolio_ticker_limit: 20
+
+opex:
+  months_ahead: 4
+  proximity_days:
+    opex_day: 0
+    opex_week: 3
+    opex_window: 10
+
+stackelberg:
+  statement_patterns:
+    fed_chair_statement:
+      - '\b(powell|warsh)\b'
+      - '\bfed chair\b'
+      - '\bfederal reserve chair\b'
+    fomc_member_statement:
+      - '\b(waller|daly|williams|kashkari|bostic|barkin|mester)\b'
+      - '\bfomc\b'
+    boj_governor_statement:
+      - '\b(ueda|kuroda)\b'
+      - '\bboj governor\b'
+      - '\bbank of japan governor\b'
+    boj_deputy_statement:
+      - '\bboj deputy\b'
+      - '\bdeputy governor\b.*\bjapan\b'
+
+options_flow:
+  ticker_limit: 50
+  expiry_limit: 2

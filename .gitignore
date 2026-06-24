@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.env
+data/frontend/
+data/v3_cycles/
+data/llm_outputs/
+logs/
+research/Bluelotus_V3_Report.*

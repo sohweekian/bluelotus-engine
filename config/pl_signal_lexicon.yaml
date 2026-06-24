@@ -1,0 +1,70 @@
+# ============================================================================
+# BlueLotus V3 — PLEXP-001 Signal Lexicon (M3 Cheap Talk Classifier)
+# pl_signal_lexicon.yaml
+# ============================================================================
+
+actor_patterns:
+  IRAN_FOREIGN_MINISTRY:
+    - '\biran\b.*\b(foreign minister|foreign ministry|spokesman|spokesperson)\b'
+    - '\biaea\b.*\biran\b'
+    - '\biran\b.*\biaea\b'
+  IRAN_IRGC:
+    - '\birgc\b'
+    - '\brevolutionary guard\b'
+    - '\biran\b.*\b(military|navy|vessel|seized|tanker)\b'
+  FED_CHAIR:
+    - '\b(powell|warsh)\b.*\b(said|says|signals|warned|stated|announces)\b'
+    - '\bfederal reserve chair\b'
+    - '\bfed chair\b'
+    - '\bkevin warsh\b'
+  FOMC_MEMBER:
+    - '\b(waller|daly|williams|kashkari|bostic|barkin|mester)\b'
+    - '\bfomc member\b'
+  BOJ_GOVERNOR:
+    - '\b(ueda|kuroda)\b.*\b(said|says|signals|warned)\b'
+    - '\bbank of japan governor\b'
+    - '\bboj governor\b'
+
+costly_signal_phrases:
+  - rate decision
+  - rate hike
+  - rate cut
+  - emergency meeting
+  - centrifuge shutdown
+  - iaea access granted
+  - physical access
+  - qqe modification
+  - ycc band
+  - production cut .{0,20}mbpd
+  - military deployment
+  - ship seized
+  - strait closed
+  - announces .{0,30}bps
+
+cheap_talk_phrases:
+  - advanced notice
+  - spokesman said
+  - spokesperson said
+  - prepared remarks
+  - speech
+  - interview
+  - testimony
+  - we are monitoring
+  - continues to
+  - reiterates
+  - calls for
+  - demands
+  - urges
+  - denies
+  - rejects .{0,20}claim
+
+credibility:
+  costly_signal: 0.85
+  cheap_talk: 0.20
+  lr_adjustment_floor: 0.20
+  lr_adjustment_ceiling: 1.00
+
+iran_keywords:
+  - iran
+  - hormuz
+  - iaea

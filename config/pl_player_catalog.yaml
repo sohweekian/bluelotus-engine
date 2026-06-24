@@ -1,0 +1,83 @@
+# ============================================================================
+# BlueLotus V3 — BGTM-V1 Player Catalog
+# pl_player_catalog.yaml
+#
+# PURPOSE: Reference catalog for geopolitical actors used by the Cheap Talk
+# Classifier (M3), Geo-LR Bridge (M7), and Stackelberg Discount (M9).
+# Based on BGTM-V1 §4.1 Player Catalog.
+# ============================================================================
+
+players:
+
+  IRAN_FOREIGN_MINISTRY:
+    full_name: "Islamic Republic of Iran — Ministry of Foreign Affairs"
+    strategic_type: SIGNALLER
+    is_stackelberg_leader: false
+    default_credibility_discount: 0.20  # Statements historically cheap talk
+    costly_signal_indicators:
+      - "centrifuge_shutdown_verified"
+      - "iaea_physical_access_granted"
+      - "sanctions_compliance_action"
+    cheap_talk_indicators:
+      - "advanced_notice"
+      - "diplomatic_statement"
+      - "spokesperson_comment"
+
+  IRAN_IRGC:
+    full_name: "Islamic Revolutionary Guard Corps"
+    strategic_type: CREDIBLE_THREAT
+    is_stackelberg_leader: false
+    default_credibility_discount: 0.10  # Military actions are costly signals
+    costly_signal_indicators:
+      - "military_deployment"
+      - "ship_seizure"
+      - "strait_interdiction"
+
+  FED_CHAIR:
+    full_name: "Federal Reserve Chair"
+    strategic_type: STACKELBERG_LEADER
+    is_stackelberg_leader: true
+    stackelberg_discount_factor: 0.60
+    default_credibility_discount: 0.40
+    costly_signal_indicators:
+      - "emergency_rate_change"
+      - "balance_sheet_action"
+      - "forward_guidance_revision_in_dot_plot"
+    cheap_talk_indicators:
+      - "speech"
+      - "interview"
+      - "testimony_prepared_remarks"
+
+  FOMC_MEMBER:
+    full_name: "Federal Open Market Committee Member (non-Chair)"
+    strategic_type: STACKELBERG_FOLLOWER_INTERNAL
+    is_stackelberg_leader: false
+    stackelberg_discount_factor: 0.55
+    default_credibility_discount: 0.45
+
+  BOJ_GOVERNOR:
+    full_name: "Bank of Japan Governor"
+    strategic_type: STACKELBERG_FOLLOWER
+    is_stackelberg_leader: false
+    stackelberg_discount_factor: 0.60
+    default_credibility_discount: 0.40
+    domestic_constraint: "deflation_exit_mandate"
+    costly_signal_indicators:
+      - "rate_decision"
+      - "qqe_modification"
+      - "ycc_band_change"
+
+  SAUDI_ARAMCO:
+    full_name: "Saudi Aramco / Saudi Energy Ministry"
+    strategic_type: PRODUCTION_SETTER
+    is_stackelberg_leader: false
+    default_credibility_discount: 0.30
+
+  OPEC_PLUS:
+    full_name: "OPEC+ Ministerial Meeting"
+    strategic_type: CARTEL_COORDINATOR
+    is_stackelberg_leader: false
+    default_credibility_discount: 0.35
+    costly_signal_indicators:
+      - "production_cut_announced_mbpd"
+      - "emergency_meeting_called"
