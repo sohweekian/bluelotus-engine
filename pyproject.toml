@@ -7,7 +7,7 @@ name = "bluelotus-engine"
 version = "3.0.0"
 description = "Deterministic BlueLotus V3 research engine — governance, clerk, NITE-PEI, SLICDO (no publish, no telegram)."
 readme = "README.md"
-license = { text = "MIT" }
+license = "MIT"
 requires-python = ">=3.11"
 authors = [{ name = "BlueLotus Project Contributors" }]
 keywords = ["finance", "research", "governance", "bayesian", "family-office"]
