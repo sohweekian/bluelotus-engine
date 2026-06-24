@@ -17,6 +17,8 @@ This is the **sanitized public research edition**. It deliberately excludes:
 
 ```bash
 pip install bluelotus-engine
+# or if console script not on PATH:
+python -m bluelotus_engine.cli --help
 ```
 
 Or from source:
