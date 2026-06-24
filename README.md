@@ -2,7 +2,7 @@
 
 **BlueLotus V3 — deterministic research engine (frozen v3.0.0)**
 
-Governance gates · contradiction clerk · Bayesian thesis updates (NITE-PEI) · institutional learning (SLICDO).
+Governance gates · contradiction clerk · Bayesian thesis updates (NITE-PEI) · **Nash / QRE game theory (BGTM-V1)** · institutional learning (SLICDO).
 
 > Research only. No advice. No orders. `CIO_ONLY_MANUAL`.
 
@@ -28,11 +28,12 @@ Release page: https://github.com/sohweekian/bluelotus-engine/releases/tag/v3.0.0
 | **Reports** | Deterministic TXT / XLSX / DOCX intelligence package |
 | **Zone A clerk** | Contradiction map from rules and portfolio math — **no LLM agents** |
 | **NITE-PEI** | Bayesian thesis probabilities, CKRI kill-risk, Kelly advisory |
+| **BGTM-V1** | Nash Equilibrium · QRE · Correlated Equilibrium · Geo-LR → NITE-PEI |
 | **SLICDO** | Claims, resolutions, replay, CIO-gated learning proposals |
 
 **Not included:** GitHub publish, Telegram, broker fetchers, LLM agent council, private portfolio data.
 
-Full explanation: [WHAT_IS_BLUELOTUS.md](https://github.com/sohweekian/bluelotus-engine-docs/blob/main/WHAT_IS_BLUELOTUS.md)
+Full explanation: [WHAT_IS_BLUELOTUS.md](https://github.com/sohweekian/bluelotus-engine-docs/blob/main/WHAT_IS_BLUELOTUS.md) · [BGTM game theory](https://github.com/sohweekian/bluelotus-engine-docs/blob/main/BGTM.md)
 
 ---
 
