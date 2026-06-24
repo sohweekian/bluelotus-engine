@@ -15,6 +15,15 @@ This is the **sanitized public research edition**. It deliberately excludes:
 
 ## Install
 
+
+## Install from GitHub release (no PyPI account needed)
+
+```bash
+pip install https://github.com/sohweekian/bluelotus-engine/releases/download/v3.0.0/bluelotus_engine-3.0.0-py3-none-any.whl
+```
+
+PyPI publish (`pip install bluelotus-engine`) — see `PYPI_SETUP.md` in the release staging folder when ready.
+
 ```bash
 pip install bluelotus-engine
 # or if console script not on PATH:
